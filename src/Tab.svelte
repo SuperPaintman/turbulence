@@ -2,6 +2,21 @@
   /* Imports */
   import { createEventDispatcher } from 'svelte';
 
+  /* Types */
+  type Range = [start: number, end: number];
+  type Part = {
+    text: string;
+    highlighted: boolean;
+  };
+
+  /* Props */
+  export let id: number | undefined;
+  export let title: string | undefined;
+  export let url: string | undefined;
+  export let favIconUrl: string | undefined;
+  export let titleHighlightRanges: Range[] | undefined = undefined;
+  export let urlHighlightRanges: Range[] | undefined = undefined;
+
   const dispatch =
     createEventDispatcher<{
       click: {
@@ -59,10 +74,53 @@
     };
   }
 
-  export let id: number | undefined;
-  export let title: string | undefined;
-  export let url: string | undefined;
-  export let favIconUrl: string | undefined;
+  function textToParts(text?: string, ranges?: Range[]): Part[] {
+    if (text === undefined) {
+      return [];
+    }
+
+    if (ranges === undefined || ranges.length === 0) {
+      return [{ text, highlighted: false }];
+    }
+
+    const parts: Part[] = [];
+
+    let i = 0;
+    for (const range of ranges) {
+      const [start, end] = range;
+
+      if (start >= text.length) {
+        i = start;
+        break;
+      }
+
+      if (start !== i) {
+        parts.push({
+          text: text.slice(i, start),
+          highlighted: false
+        });
+      }
+
+      parts.push({
+        text: text.slice(start, Math.min(end, text.length)),
+        highlighted: true
+      });
+
+      i = end;
+    }
+
+    if (i < text.length) {
+      parts.push({
+        text: text.slice(i),
+        highlighted: false
+      });
+    }
+
+    return parts;
+  }
+
+  $: titleParts = textToParts(title, titleHighlightRanges);
+  $: urlParts = textToParts(url, urlHighlightRanges);
 </script>
 
 <div class="tab" use:bindCustomEvents>
@@ -72,10 +130,17 @@
   />
 
   <div>
-    <span>{id}</span> - <span>{title}</span>
+    <span>{id}</span> -
+    {#each titleParts as part}
+      <span class:highlighted={part.highlighted}>{part.text}</span>
+    {/each}
   </div>
 
-  <div>{url}</div>
+  <div>
+    {#each urlParts as part}
+      <span class:highlighted={part.highlighted}>{part.text}</span>
+    {/each}
+  </div>
 </div>
 
 <style>
@@ -99,5 +164,9 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+  }
+
+  .highlighted {
+    color: rgb(0, 110, 255);
   }
 </style>
