@@ -287,8 +287,8 @@
   });
 </script>
 
-<div>
-  <h1>Tabs ({tabs.length})</h1>
+<div class="popup">
+  <h1>Tabs [{tabs.length}/{allTabs.length}]</h1>
   <input bind:value={searchWord} />
   <div>
     {#each tabs as tab (tab.id)}
@@ -304,3 +304,9 @@
     {/each}
   </div>
 </div>
+
+<style>
+  .popup {
+    width: 640px;
+  }
+</style>
