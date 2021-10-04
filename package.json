@@ -1,0 +1,44 @@
+{
+  "name": "tab-manager",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "NODE_ENV=production npx webpack",
+    "watch": "npx webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SuperPaintman/tab-manager.git"
+  },
+  "keywords": [],
+  "author": "SuperPaintman <SuperPaintmanDeveloper@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/SuperPaintman/tab-manager/issues"
+  },
+  "homepage": "https://github.com/SuperPaintman/tab-manager#readme",
+  "devDependencies": {
+    "@tsconfig/svelte": "1.0.13",
+    "@types/chrome": "0.0.158",
+    "@types/node": "16.3.3",
+    "clean-webpack-plugin": "4.0.0",
+    "css-loader": "5.0.1",
+    "html-webpack-plugin": "5.3.2",
+    "mini-css-extract-plugin": "2.3.0",
+    "normalize.css": "8.0.1",
+    "postcss": "8.3.8",
+    "postcss-css-variables": "0.18.0",
+    "postcss-loader": "6.1.1",
+    "svelte": "3.43.1",
+    "svelte-check": "2.2.6",
+    "svelte-loader": "3.1.2",
+    "svelte-preprocess": "4.9.8",
+    "ts-loader": "9.2.6",
+    "tslib": "2.3.1",
+    "typescript": "4.3.5",
+    "webpack": "5.56.0",
+    "webpack-cli": "4.8.0",
+    "webpack-dev-server": "3.11.2",
+    "webpack-manifest-plugin": "4.0.2"
+  }
+}
