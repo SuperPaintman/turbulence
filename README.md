@@ -1,10 +1,10 @@
-# Tab Manager
+# Turbulence - Tab Manager
 
 ---
 
 #### License
 
-[MIT](./LICENSE)
+[GNU GPLv3](./LICENSE)
 
 ---
 

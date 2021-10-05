@@ -1,5 +1,6 @@
 {
-  "name": "tab-manager",
+  "name": "turbulence",
+  "description": "Tab Manager",
   "private": true,
   "main": "index.js",
   "scripts": {
@@ -9,15 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SuperPaintman/tab-manager.git"
+    "url": "git+https://github.com/SuperPaintman/turbulence.git"
   },
   "keywords": [],
   "author": "SuperPaintman <SuperPaintmanDeveloper@gmail.com>",
-  "license": "Apache-2.0",
+  "license": "GNU GPLv3",
   "bugs": {
-    "url": "https://github.com/SuperPaintman/tab-manager/issues"
+    "url": "https://github.com/SuperPaintman/turbulence/issues"
   },
-  "homepage": "https://github.com/SuperPaintman/tab-manager#readme",
+  "homepage": "https://github.com/SuperPaintman/turbulence#readme",
   "devDependencies": {
     "@fortawesome/fontawesome-free": "5.15.4",
     "@tsconfig/svelte": "1.0.13",
