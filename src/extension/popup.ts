@@ -1,6 +1,7 @@
 'use strict';
 
 import 'normalize.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 import '~/common/global.css';
 
 import Popup from './Popup.svelte';

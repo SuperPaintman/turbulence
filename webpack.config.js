@@ -150,6 +150,15 @@ module.exports = filter([
             { loader: 'css-loader' },
             { loader: 'postcss-loader' }
           ]
+        },
+
+        /* Fonts */
+        {
+          test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
+          loader: 'file-loader',
+          options: {
+            name: 'assets/[contenthash].[ext]'
+          }
         }
       ])
     }
@@ -238,6 +247,15 @@ module.exports = filter([
             { loader: 'css-loader' },
             { loader: 'postcss-loader' }
           ]
+        },
+
+        /* Fonts */
+        {
+          test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
+          loader: 'file-loader',
+          options: {
+            name: 'assets/[contenthash].[ext]'
+          }
         }
       ])
     },

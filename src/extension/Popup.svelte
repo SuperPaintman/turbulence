@@ -1,6 +1,7 @@
 <script lang="ts">
   /* Imports */
   import { onDestroy, onMount } from 'svelte';
+  import Header from '~/common/Header.svelte';
   import Tab from '~/common/Tab.svelte';
 
   /* Types */
@@ -287,9 +288,75 @@
     return res;
   }
 
+  function count<T>(arr: Array<T>, fn: (el: T) => boolean): number {
+    let res = 0;
+    for (const el of arr) {
+      if (fn(el)) {
+        res++;
+      }
+    }
+    return res;
+  }
+
+  function splitTabsByWindows(
+    allTabs: chrome.tabs.Tab[],
+    tabs: Tab[]
+  ): Array<{
+    windowId: string;
+    windowIndex: number;
+    tabs: Tab[];
+    count: number;
+    selected: number;
+  }> {
+    const map: {
+      [windowId: string]: {
+        index: number;
+        tabs: Tab[];
+        count: 0;
+      };
+    } = {};
+
+    let windowIndex = 0;
+    for (const tab of tabs) {
+      map[tab.windowId] ??= {
+        index: windowIndex++,
+        tabs: [],
+        count: 0
+      };
+      map[tab.windowId].tabs.push(tab);
+    }
+
+    for (const tab of allTabs) {
+      map[tab.windowId] ??= {
+        index: windowIndex++,
+        tabs: [],
+        count: 0
+      };
+      map[tab.windowId].count++;
+    }
+
+    const res = [];
+    for (const [windowId, data] of Object.entries(map)) {
+      if (data.tabs.length === 0) {
+        continue;
+      }
+
+      res.push({
+        windowId,
+        windowIndex: data.index,
+        tabs: data.tabs,
+        count: data.count,
+        selected: count(data.tabs, (tab) => tab.selected)
+      });
+    }
+
+    return res;
+  }
+
   let searchWord: string = '';
   $: allTabs = [] as chrome.tabs.Tab[];
   $: tabs = filterTabs(allTabs, searchWord);
+  $: tabsInWindows = splitTabsByWindows(allTabs, tabs);
 
   function handleBrowserTabsCreated(tab: chrome.tabs.Tab) {
     allTabs.push(tab);
@@ -301,6 +368,15 @@
     changeInfo: chrome.tabs.TabChangeInfo,
     tab: chrome.tabs.Tab
   ) {
+    // Mark the old tab (in this window) as deactiveted.
+    if (tab.active) {
+      for (let i = 0, ii = allTabs.length; i < ii; i++) {
+        if (allTabs[i].windowId === tab.windowId) {
+          allTabs[i].active = false;
+        }
+      }
+    }
+
     for (let i = 0, ii = allTabs.length; i < ii; i++) {
       if (allTabs[i].id === tabId) {
         allTabs[i] = tab;
@@ -315,6 +391,21 @@
     removeInfo: chrome.tabs.TabRemoveInfo
   ) {
     allTabs = allTabs.filter((tab) => tab.id !== tabId);
+  }
+
+  function handleRemoveSelected() {
+    const ids: number[] = [];
+    for (const tab of tabs) {
+      const { id, selected } = tab;
+
+      if (id !== undefined && selected) {
+        ids.push(id);
+      }
+    }
+
+    if (ids.length > 0) {
+      browser.tabs.remove(ids);
+    }
   }
 
   onMount(() => {
@@ -335,28 +426,64 @@
 </script>
 
 <div class="popup">
-  <h1>Tabs [{tabs.length}/{allTabs.length}]</h1>
-  <input bind:value={searchWord} />
-  <div class="tabs">
-    {#each tabs as tab (tab.id)}
-      <Tab
-        id={tab.id}
-        title={tab.title}
-        url={tab.url}
-        favIconUrl={tab.favIconUrl}
-        active={tab.active}
-        selected={tab.selected}
-        titleHighlightRanges={tab.titleHighlightRanges}
-        urlHighlightRanges={tab.urlHighlightRanges}
-        on:click={handleTabClick}
-      />
+  <Header bind:search={searchWord} on:clickRemove={handleRemoveSelected} />
+
+  <div class="windows">
+    {#each tabsInWindows as tabsInWindow (tabsInWindow.windowId)}
+      <div class="window">
+        <div class="window-title">
+          <b>Window {tabsInWindow.windowIndex + 1}</b> ({tabsInWindow.count} tabs,
+          {tabsInWindow.selected}
+          selected)
+        </div>
+
+        <div class="tabs">
+          {#each tabsInWindow.tabs as tab (tab.id)}
+            <Tab
+              id={tab.id}
+              title={tab.title}
+              url={tab.url}
+              favIconUrl={tab.favIconUrl}
+              active={tab.active}
+              selected={tab.selected}
+              titleHighlightRanges={tab.titleHighlightRanges}
+              urlHighlightRanges={tab.urlHighlightRanges}
+              on:click={handleTabClick}
+            />
+          {/each}
+        </div>
+      </div>
     {/each}
   </div>
+
+  {#if tabs.length === 0}
+    <div class="zero-state">No tabs</div>
+  {/if}
 </div>
 
 <style>
+  @import '../common/config.css';
+
   :global(body) {
     width: 640px;
     overflow-x: hidden;
+  }
+
+  .window-title {
+    padding: 16px 32px;
+    margin-top: 24px;
+
+    background: color(var(--color-dark-bg) shade(15%));
+  }
+
+  .window:first-child .window-title {
+    margin-top: 0;
+  }
+
+  .zero-state {
+    padding: 32px;
+
+    font-size: 18px;
+    font-weight: 700;
   }
 </style>

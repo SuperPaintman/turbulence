@@ -19,11 +19,13 @@
   },
   "homepage": "https://github.com/SuperPaintman/tab-manager#readme",
   "devDependencies": {
+    "@fortawesome/fontawesome-free": "5.15.4",
     "@tsconfig/svelte": "1.0.13",
     "@types/chrome": "0.0.158",
     "@types/node": "16.3.3",
     "clean-webpack-plugin": "4.0.0",
     "css-loader": "5.0.1",
+    "file-loader": "6.2.0",
     "html-webpack-plugin": "5.3.2",
     "mini-css-extract-plugin": "2.3.0",
     "normalize.css": "8.0.1",

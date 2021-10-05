@@ -1,5 +1,6 @@
 <script lang="ts">
   /* Imports */
+  import Header from '~/common/Header.svelte';
   import Tab from '~/common/Tab.svelte';
 
   /* Types */
@@ -79,23 +80,31 @@
         break;
     }
   }
+
+  $: selected = tabs.filter((tab) => tab.selected).length;
+  $: count = tabs.length;
+
+  let searchWord = '';
 </script>
 
 <div class="root">
-  {#each tabs as tab (tab.id)}
-    <Tab
-      id={tab.id}
-      title={tab.title}
-      url={tab.url}
-      favIconUrl={tab.favIconUrl}
-      active={tab.active}
-      selected={tab.selected}
-      showUrl
-      titleHighlightRanges={tab.titleHighlightRanges}
-      urlHighlightRanges={tab.urlHighlightRanges}
-      on:click={handleTabClick}
-    />
-  {/each}
+  <Header bind:search={searchWord} />
+  <div>
+    {#each tabs as tab (tab.id)}
+      <Tab
+        id={tab.id}
+        title={tab.title}
+        url={tab.url}
+        favIconUrl={tab.favIconUrl}
+        active={tab.active}
+        selected={tab.selected}
+        showUrl
+        titleHighlightRanges={tab.titleHighlightRanges}
+        urlHighlightRanges={tab.urlHighlightRanges}
+        on:click={handleTabClick}
+      />
+    {/each}
+  </div>
 </div>
 
 <style>
