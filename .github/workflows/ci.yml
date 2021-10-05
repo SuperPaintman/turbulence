@@ -97,6 +97,6 @@ jobs:
 
             - uses: actions/upload-artifact@v2
               with:
-                  name: turbulence.zip
+                  name: turbulence
                   path: build/turbulence.zip
                   retention-days: 7
