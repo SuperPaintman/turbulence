@@ -88,15 +88,8 @@ jobs:
 
             - run: npm run build
 
-            - name: Build ZIP archive
-              run: |
-                  rm -rf ./build
-                  mkdir -p ./build
-                  (cd ./public/extension && zip ../../build/turbulence.zip -r ./)
-                  unzip -l ./build/turbulence.zip
-
             - uses: actions/upload-artifact@v2
               with:
                   name: turbulence
-                  path: build/turbulence.zip
+                  path: public/extension
                   retention-days: 7
