@@ -92,7 +92,7 @@ jobs:
               run: |
                   rm -rf ./build
                   mkdir -p ./build
-                  (cd ./public/extension && zip ../../build/turbulence.zip -r .)
+                  (cd ./public/extension && zip ../../build/turbulence.zip -r ./)
                   unzip -l ./build/turbulence.zip
 
             - uses: actions/upload-artifact@v2
