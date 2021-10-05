@@ -1,7 +1,7 @@
 'use strict';
 
 import 'normalize.css';
-import './global.css';
+import '~/common/global.css';
 
 import Popup from './Popup.svelte';
 
@@ -10,5 +10,7 @@ if (!module.parent && typeof global.document !== 'undefined') {
     target: document.getElementById('root')!
   });
 }
+
+// document.body.classList.add('light');
 
 export default Popup;

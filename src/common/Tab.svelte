@@ -204,6 +204,18 @@
   }
   */
 
+  :global(body.dark) .tab {
+    box-shadow: 0px 2px 8px rgba(179, 179, 179, 0.1);
+  }
+
+  /*
+  @media (prefers-color-scheme: dark) {
+    :global(body:not(.light)) .tab {
+      box-shadow: 0px 2px 8px rgba(179, 179, 179, 0.1);
+    }
+  }
+  */
+
   .icon {
     flex: 0 0 auto;
 
@@ -276,6 +288,12 @@
   }
 
   .highlighted {
-    color: rgb(0, 110, 255);
+    color: #238cd1;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(body:not(.light)) .highlighted {
+      color: #51afef;
+    }
   }
 </style>
