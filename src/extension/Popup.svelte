@@ -1,7 +1,7 @@
 <script lang="ts">
   /* Imports */
   import { onMount } from 'svelte';
-  import Tab from './Tab.svelte';
+  import Tab from '~/common/Tab.svelte';
 
   /* Types */
   type Range = [start: number, end: number];
