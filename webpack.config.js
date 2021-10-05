@@ -97,6 +97,12 @@ module.exports = filter([
             url: pkg.homepage
           };
 
+          manifest.icons = {};
+
+          for (const size of [16, 19, 24, 32, 38, 48, 50, 100, 128]) {
+            manifest.icons[size] = `icons/icon-${size}.png`;
+          }
+
           manifest.permissions = ['tabs'];
 
           if (popup) {
@@ -104,6 +110,7 @@ module.exports = filter([
               manifest.browser_action = {};
             }
 
+            manifest.browser_action.default_icon = 'icons/icon-48.png';
             manifest.browser_action.default_popup = 'popup.html';
           }
 
@@ -135,6 +142,10 @@ module.exports = filter([
           {
             from: path.join(__dirname, 'README.md'),
             to: path.join(outputPath, 'extension')
+          },
+          {
+            from: path.join(__dirname, 'assets/icons'),
+            to: path.join(outputPath, 'extension/icons')
           }
         ]
       })
