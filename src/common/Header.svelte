@@ -14,7 +14,9 @@
   }
 
   function autofocus(elem: HTMLInputElement) {
-    elem.focus();
+    setTimeout(() => {
+      elem.focus();
+    });
   }
 </script>
 
@@ -98,7 +100,7 @@
 
     border-radius: 4px;
 
-    background: color(var(--color-bg) shade(10%));
+    background: color(var(--color-bg) shade(5%));
 
     font-family: monospace, sans-serif;
     font-size: 16px;
@@ -129,7 +131,7 @@
 
     margin: 0 4px;
 
-    background: color(var(--color-bg) shade(10%));
+    background: color(var(--color-bg) shade(5%));
 
     border-radius: 4px;
 

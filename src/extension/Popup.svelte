@@ -472,12 +472,20 @@
   .window-title {
     padding: 16px 32px;
     margin-top: 24px;
+  }
 
+  :global(body.dark) .window-title {
     background: color(var(--color-dark-bg) shade(15%));
   }
 
+  @media (prefers-color-scheme: dark) {
+    :global(body:not(.light)) .window-title {
+      background: color(var(--color-dark-bg) shade(15%));
+    }
+  }
+
   .window:first-child .window-title {
-    margin-top: 0;
+    margin-top: 8px;
   }
 
   .zero-state {
