@@ -102,14 +102,103 @@ module.exports = filter([
         template: path.join(srcPath, 'extension/popup.html'),
         filename: 'popup.html',
         chunks: ['popup'],
-        cache: true,
-        minify: false
+        cache: true
       }),
 
       /* CSS */
       new MiniCssExtractPlugin({
         filename: `[name]${onlyProd('.[chunkhash]', '')}.css`,
         chunkFilename: `[name]${onlyProd('.[chunkhash]', '')}.chunk.css`
+      })
+    ]),
+    module: {
+      rules: filter([
+        /* TypeScript */
+        {
+          test: /\.ts$/,
+          loader: 'ts-loader',
+          exclude: /node_modules/
+        },
+
+        /* Svelte */
+        {
+          test: /\.svelte$/,
+          use: {
+            loader: 'svelte-loader',
+            options: {
+              compilerOptions: {
+                dev: !prod
+              },
+              emitCss: prod,
+              preprocess: sveltePreprocess({ sourceMap: !prod })
+            }
+          }
+        },
+        {
+          // required to prevent errors from Svelte on Webpack 5+
+          test: /node_modules\/svelte\/.*\.mjs$/,
+          resolve: {
+            fullySpecified: false
+          }
+        },
+
+        /* CSS */
+        {
+          test: /\.css$/,
+          use: [
+            { loader: MiniCssExtractPlugin.loader },
+            { loader: 'css-loader' },
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: [['postcss-css-variables', { preserve: false }]]
+                }
+              }
+            }
+          ]
+        }
+      ])
+    }
+  },
+  /* Debug */
+  {
+    mode,
+    entry: {
+      main: path.join(srcPath, 'debug/index.ts')
+    },
+    output: {
+      path: path.join(outputPath, 'debug'),
+      filename: `js/[name]${onlyProd('.[chunkhash]', '')}.js`,
+      chunkFilename: `js/[name]${onlyProd('.[chunkhash]', '')}.chunk.js`,
+      sourceMapFilename: '[file].map',
+      publicPath: '/'
+    },
+    devtool: onlyDev('source-map', false),
+    resolve: {
+      alias: {
+        svelte: path.dirname(require.resolve('svelte/package.json')),
+        images: imagesPath,
+        '~': srcPath
+      },
+      extensions: ['.ts', '.mjs', '.js', '.svelte'],
+      mainFields: ['svelte', 'browser', 'module', 'main']
+    },
+    plugins: filter([
+      /* Clean */
+      new CleanWebpackPlugin(),
+
+      /* HTML */
+      new HtmlWebpackPlugin({
+        template: path.join(srcPath, 'debug/index.html'),
+        filename: 'index.html',
+        cache: true
+      }),
+
+      /* CSS */
+      new MiniCssExtractPlugin({
+        filename: `css/[name]${onlyProd('.[chunkhash]', '')}.css`,
+        chunkFilename: `css/[name]${onlyProd('.[chunkhash]', '')}.chunk.css`
       })
     ]),
     module: {
@@ -168,9 +257,10 @@ module.exports = filter([
     },
     devServer: {
       hot: true,
-      contentBase: 'public',
+      contentBase: path.join(outputPath, 'debug'),
       stats: 'errors-only',
-      watchContentBase: true
+      watchContentBase: true,
+      port: 8081
     }
   }
 ]);

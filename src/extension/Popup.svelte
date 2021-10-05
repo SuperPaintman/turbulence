@@ -297,6 +297,7 @@
         title={tab.title}
         url={tab.url}
         favIconUrl={tab.favIconUrl}
+        active={tab.active}
         titleHighlightRanges={tab.titleHighlightRanges}
         urlHighlightRanges={tab.urlHighlightRanges}
         on:click={handleTabClick}
