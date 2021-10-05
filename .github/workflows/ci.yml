@@ -67,3 +67,36 @@ jobs:
 
             - run: npm run build
             # - run: npm test
+
+    build-release:
+        needs:
+            - build-development
+            - build-production
+
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up Node.js 16.x
+              uses: actions/setup-node@v2
+              with:
+                  node-version: 16.x
+                  cache: "npm"
+
+            - run: npm ci
+
+            - run: npm run build
+
+            - name: Build ZIP archive
+              run: |
+                  rm -rf ./build
+                  mkdir -p ./build
+                  (cd ./public/extension && zip ../../build/turbulence.zip -r .)
+                  unzip -l ./build/turbulence.zip
+
+            - uses: actions/upload-artifact@v2
+              with:
+                  name: turbulence.zip
+                  path: build/turbulence.zip
+                  retention-days: 7

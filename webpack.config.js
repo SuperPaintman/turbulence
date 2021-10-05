@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const sveltePreprocess = require('svelte-preprocess');
 
@@ -69,6 +70,9 @@ module.exports = filter([
       /* Manifest */
       new WebpackManifestPlugin({
         generate(seed, files, entries) {
+          // See: https://developer.chrome.com/docs/extensions/mv2/manifest/
+          // See: https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json
+
           const popup = files.find((f) => f.chunk.name === 'popup');
 
           const pkg = require('./package.json');
@@ -77,11 +81,21 @@ module.exports = filter([
             manifest_version: 2
           };
 
-          if (pkg.name) {
-            manifest.name = pkg.name;
+          manifest.name = 'Turbulence Tab Manager';
+          manifest.short_name = 'Turbulence';
+
+          if (pkg.description) {
+            manifest.description = pkg.description;
           }
 
           manifest.version = pkg.version || '0.0.0';
+
+          manifest.author = 'Aleksandr Krivoshchekov (SuperPaintman)';
+          manifest.homepage_url = pkg.homepage;
+          manifest.developer = {
+            name: 'Aleksandr Krivoshchekov (SuperPaintman)',
+            url: pkg.homepage
+          };
 
           manifest.permissions = ['tabs'];
 
@@ -109,6 +123,20 @@ module.exports = filter([
       new MiniCssExtractPlugin({
         filename: `[name]${onlyProd('.[chunkhash]', '')}.css`,
         chunkFilename: `[name]${onlyProd('.[chunkhash]', '')}.chunk.css`
+      }),
+
+      /* License */
+      new CopyPlugin({
+        patterns: [
+          {
+            from: path.join(__dirname, 'LICENSE'),
+            to: path.join(outputPath, 'extension')
+          },
+          {
+            from: path.join(__dirname, 'README.md'),
+            to: path.join(outputPath, 'extension')
+          }
+        ]
       })
     ]),
     module: {
