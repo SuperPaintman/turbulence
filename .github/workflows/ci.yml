@@ -9,7 +9,38 @@ on:
             - master
 
 jobs:
-    build:
+    build-development:
+        runs-on: ${{ matrix.os }}
+
+        strategy:
+            matrix:
+                os:
+                    - ubuntu-latest
+                    - macos-latest
+
+                node-version:
+                    - 12.x
+                    # - 14.x
+                    - 16.x
+
+        env:
+            NODE_ENV: development
+
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Set up Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node-version }}
+                  cache: "npm"
+
+            - run: npm ci
+
+            - run: NODE_ENV=development npx webpack
+            # - run: npm test
+
+    build-production:
         runs-on: ${{ matrix.os }}
 
         strategy:
