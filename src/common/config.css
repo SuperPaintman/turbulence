@@ -3,4 +3,18 @@
   --color-fg: #000000;
   --color-dark-bg: #282c34;
   --color-dark-fg: #dfdfdf;
+
+  --color-black: #1b2229;
+  --color-red: #ff6c6b;
+  --color-orange: #da8548;
+  --color-green: #98be65;
+  --color-teal: #4db5bd;
+  --color-yellow: #ecbe7b;
+  --color-blue: #51afef;
+  --color-dark-blue: #2257a0;
+  --color-magenta: #c678dd;
+  --color-violet: #a9a1e1;
+  --color-cyan: #46d9ff;
+  --color-white: #dfdfdf;
+  --color-dark-cyan: #5699af;
 }

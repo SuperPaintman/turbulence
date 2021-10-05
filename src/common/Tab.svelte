@@ -186,7 +186,7 @@
     width: 8px;
     height: 100%;
 
-    background: #98be65;
+    background: var(--color-blue);
 
     z-index: 1;
   }
@@ -220,7 +220,7 @@
   }
 
   .inner.selected {
-    box-shadow: 0px 0px 0px 2px #c678dd inset;
+    box-shadow: 0px 0px 0px 2px var(--color-magenta) inset;
   }
 
   .icon {
@@ -229,7 +229,8 @@
     width: 16px;
     height: 16px;
 
-    margin-right: 8px;
+    margin-left: 8px;
+    margin-right: 16px;
 
     background-position: center;
     background-repeat: no-repeat;
@@ -305,16 +306,16 @@
   }
 
   .highlighted {
-    color: #238cd1;
+    color: color(var(--color-blue) shade(20%));
   }
 
   :global(body.dark) .highlighted {
-    color: #51afef;
+    color: var(--color-blue);
   }
 
   @media (prefers-color-scheme: dark) {
     :global(body:not(.light)) .highlighted {
-      color: #51afef;
+      color: var(--color-blue);
     }
   }
 </style>
