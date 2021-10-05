@@ -1,17 +1,20 @@
+@import './config.css';
 @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700;800&display=swap');
 
 body {
   font-family: 'Open Sans', sans-serif;
+  background: color(var(--color-bg) shade(5%));
+  color: var(--color-fg);
 }
 
 body.dark {
-  background: #282c34;
-  color: #dfdfdf;
+  background: color(var(--color-dark-bg) shade(20%));
+  color: var(--color-dark-fg);
 }
 
 @media (prefers-color-scheme: dark) {
   body:not(.light) {
-    background: #282c34;
-    color: #dfdfdf;
+    background: color(var(--color-dark-bg) shade(20%));
+    color: var(--color-dark-fg);
   }
 }

@@ -126,55 +126,50 @@
   $: urlParts = textToParts(url, urlHighlightRanges);
 </script>
 
-<div
-  class="tab"
-  class:active
-  class:selected
-  class:show-url={showUrl}
-  use:bindCustomEvents
->
-  <div
-    class="icon"
-    class:no-icon={!favIconUrl}
-    style={favIconUrl ? `background-image: url(${favIconUrl})` : undefined}
-  />
+<div class="tab" class:active class:show-url={showUrl} use:bindCustomEvents>
+  <div class="inner" class:selected>
+    <div
+      class="icon"
+      class:no-icon={!favIconUrl}
+      style={favIconUrl ? `background-image: url(${favIconUrl})` : undefined}
+    />
 
-  <div class="content">
-    <div class="title">
-      {#each titleParts as part}
-        <span class:highlighted={part.highlighted}>{part.text}</span>
-      {/each}
-    </div>
-
-    {#if showUrl}
-      <div class="url">
-        {#each urlParts as part}
+    <div class="content">
+      <div class="title">
+        {#each titleParts as part}
           <span class:highlighted={part.highlighted}>{part.text}</span>
         {/each}
       </div>
-    {/if}
+
+      {#if showUrl}
+        <div class="url">
+          {#each urlParts as part}
+            <span class:highlighted={part.highlighted}>{part.text}</span>
+          {/each}
+        </div>
+      {/if}
+    </div>
   </div>
 </div>
 
 <style>
+  @import './config.css';
+
   .tab {
     position: relative;
-    display: flex;
 
     margin: 8px;
-    padding: 8px;
-    padding-left: 16px;
 
     border-radius: 4px;
 
     overflow: hidden;
 
+    background: var(--color-bg);
+
     box-shadow: 0px 2px 8px rgba(27, 27, 27, 0.1);
 
     font-size: 16px;
     line-height: 16px;
-
-    align-items: center;
 
     cursor: pointer;
   }
@@ -192,29 +187,41 @@
     height: 100%;
 
     background: #98be65;
-  }
 
-  .tab.selected {
-    box-shadow: 0px 0px 0px 2px #c678dd inset;
+    z-index: 1;
   }
-
-  /*
-  .tab.selected::before {
-    background: #c678dd;
-  }
-  */
 
   :global(body.dark) .tab {
-    box-shadow: 0px 2px 8px rgba(179, 179, 179, 0.1);
+    background: var(--color-dark-bg);
+
+    box-shadow: 0px 2px 8px rgba(179, 179, 179, 0.03);
   }
 
-  /*
   @media (prefers-color-scheme: dark) {
     :global(body:not(.light)) .tab {
-      box-shadow: 0px 2px 8px rgba(179, 179, 179, 0.1);
+      background: var(--color-dark-bg);
+
+      box-shadow: 0px 2px 8px rgba(179, 179, 179, 0.03);
     }
   }
-  */
+
+  .inner {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    padding: 8px;
+    padding-left: 16px;
+
+    border-radius: 4px;
+
+    z-index: 2;
+  }
+
+  .inner.selected {
+    box-shadow: 0px 0px 0px 2px #c678dd inset;
+  }
 
   .icon {
     flex: 0 0 auto;
@@ -237,6 +244,16 @@
   .no-icon {
     background: rgba(27, 27, 27, 0.1);
     border-radius: 4px;
+  }
+
+  :global(body.dark) .no-icon {
+    background: rgba(192, 192, 192, 0.1);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global(body:not(.light)) .no-icon {
+      background: rgba(192, 192, 192, 0.1);
+    }
   }
 
   .content {
@@ -289,6 +306,10 @@
 
   .highlighted {
     color: #238cd1;
+  }
+
+  :global(body.dark) .highlighted {
+    color: #51afef;
   }
 
   @media (prefers-color-scheme: dark) {

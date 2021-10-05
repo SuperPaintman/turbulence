@@ -130,7 +130,7 @@ module.exports = filter([
                 dev: !prod
               },
               emitCss: prod,
-              preprocess: sveltePreprocess({ sourceMap: !prod })
+              preprocess: sveltePreprocess({ sourceMap: !prod, postcss: true })
             }
           }
         },
@@ -148,14 +148,7 @@ module.exports = filter([
           use: [
             { loader: MiniCssExtractPlugin.loader },
             { loader: 'css-loader' },
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: [['postcss-css-variables', { preserve: false }]]
-                }
-              }
-            }
+            { loader: 'postcss-loader' }
           ]
         }
       ])
@@ -225,7 +218,7 @@ module.exports = filter([
                 noPreserveState: false,
                 optimistic: true
               },
-              preprocess: sveltePreprocess({ sourceMap: !prod })
+              preprocess: sveltePreprocess({ sourceMap: !prod, postcss: true })
             }
           }
         },
@@ -243,14 +236,7 @@ module.exports = filter([
           use: [
             { loader: MiniCssExtractPlugin.loader },
             { loader: 'css-loader' },
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: [['postcss-css-variables', { preserve: false }]]
-                }
-              }
-            }
+            { loader: 'postcss-loader' }
           ]
         }
       ])
