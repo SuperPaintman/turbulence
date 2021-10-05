@@ -220,7 +220,7 @@
   }
 
   .inner.selected {
-    box-shadow: 0px 0px 0px 2px var(--color-magenta) inset;
+    box-shadow: 0px 0px 0px 1px var(--color-blue) inset;
   }
 
   .icon {
@@ -280,7 +280,7 @@
 
     margin: -3px 0;
 
-    font-size: 16px;
+    font-size: 14px;
     line-height: 22px;
 
     overflow: hidden;

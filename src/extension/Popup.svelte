@@ -1,11 +1,12 @@
 <script lang="ts">
   /* Imports */
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import Tab from '~/common/Tab.svelte';
 
   /* Types */
   type Range = [start: number, end: number];
   type Tab = chrome.tabs.Tab & {
+    selected: boolean;
     titleHighlightRanges?: Range[];
     urlHighlightRanges?: Range[];
   };
@@ -164,6 +165,12 @@
         break;
 
       case Button.Right:
+        for (let i = 0, ii = tabs.length; i < ii; i++) {
+          if (tabs[i].id === id) {
+            tabs[i].selected = !tabs[i].selected;
+            break;
+          }
+        }
         break;
     }
   }
@@ -171,9 +178,10 @@
   function matchTab(
     tab: chrome.tabs.Tab,
     search: (haystack: string) => { found: boolean; positions: Range[] },
+    searchWord: string,
     where: Where
   ): Tab | null {
-    const newTab: Tab = { ...tab };
+    const newTab: Tab = { ...tab, selected: false };
 
     let found = false;
 
@@ -198,6 +206,8 @@
     if (!found) {
       return null;
     }
+
+    newTab.selected = searchWord.length > 0;
 
     return newTab;
   }
@@ -267,7 +277,7 @@
     const res: Tab[] = [];
 
     for (const tab of tabs) {
-      const newTab = matchTab(tab, search, where);
+      const newTab = matchTab(tab, search, searchWord, where);
 
       if (newTab !== null) {
         res.push(newTab);
@@ -280,17 +290,54 @@
   let searchWord: string = '';
   $: allTabs = [] as chrome.tabs.Tab[];
   $: tabs = filterTabs(allTabs, searchWord);
+
+  function handleBrowserTabsCreated(tab: chrome.tabs.Tab) {
+    allTabs.push(tab);
+    allTabs.sort((a, b) => a.index - b.index);
+  }
+
+  function handleBrowserTabsUpdate(
+    tabId: number,
+    changeInfo: chrome.tabs.TabChangeInfo,
+    tab: chrome.tabs.Tab
+  ) {
+    for (let i = 0, ii = allTabs.length; i < ii; i++) {
+      if (allTabs[i].id === tabId) {
+        allTabs[i] = tab;
+        allTabs.sort((a, b) => a.index - b.index);
+        return;
+      }
+    }
+  }
+
+  function handleBrowserTabsRemoved(
+    tabId: number,
+    removeInfo: chrome.tabs.TabRemoveInfo
+  ) {
+    allTabs = allTabs.filter((tab) => tab.id !== tabId);
+  }
+
   onMount(() => {
     browser.tabs.query({}, (ts) => {
       allTabs = ts;
     });
+
+    browser.tabs.onCreated.addListener(handleBrowserTabsCreated);
+    browser.tabs.onUpdated.addListener(handleBrowserTabsUpdate);
+    browser.tabs.onRemoved.addListener(handleBrowserTabsRemoved);
+  });
+
+  onDestroy(() => {
+    browser.tabs.onCreated.removeListener(handleBrowserTabsCreated);
+    browser.tabs.onUpdated.removeListener(handleBrowserTabsUpdate);
+    browser.tabs.onRemoved.removeListener(handleBrowserTabsRemoved);
   });
 </script>
 
 <div class="popup">
   <h1>Tabs [{tabs.length}/{allTabs.length}]</h1>
   <input bind:value={searchWord} />
-  <div>
+  <div class="tabs">
     {#each tabs as tab (tab.id)}
       <Tab
         id={tab.id}
@@ -298,6 +345,7 @@
         url={tab.url}
         favIconUrl={tab.favIconUrl}
         active={tab.active}
+        selected={tab.selected}
         titleHighlightRanges={tab.titleHighlightRanges}
         urlHighlightRanges={tab.urlHighlightRanges}
         on:click={handleTabClick}
@@ -307,7 +355,8 @@
 </div>
 
 <style>
-  .popup {
+  :global(body) {
     width: 640px;
+    overflow-x: hidden;
   }
 </style>
