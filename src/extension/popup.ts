@@ -12,6 +12,6 @@ if (!module.parent && typeof global.document !== 'undefined') {
   });
 }
 
-document.body.classList.add('light');
+// document.body.classList.add('light');
 
 export default Popup;
