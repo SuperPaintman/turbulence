@@ -95,6 +95,7 @@
     margin: 0;
     padding: 4px 8px;
     border: none;
+    outline: none;
 
     box-sizing: border-box;
 

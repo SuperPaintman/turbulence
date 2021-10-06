@@ -16,11 +16,6 @@
     url: boolean;
   };
 
-  /* Init */
-  if (!browser) {
-    (browser as any) = chrome;
-  }
-
   function fuzzySearch(
     needle: string,
     haystack: string
