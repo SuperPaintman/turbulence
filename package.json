@@ -5,9 +5,10 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "build": "NODE_ENV=production npx webpack",
-    "watch": "npx webpack --watch",
-    "serve": "npx webpack serve"
+    "build": "NODE_ENV=production webpack",
+    "watch": "webpack --watch",
+    "serve": "webpack serve",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -24,12 +25,14 @@
     "@fortawesome/fontawesome-free": "5.15.4",
     "@tsconfig/svelte": "1.0.13",
     "@types/chrome": "0.0.158",
+    "@types/jest": "27.0.2",
     "@types/node": "16.3.3",
     "clean-webpack-plugin": "4.0.0",
     "copy-webpack-plugin": "9.0.1",
     "css-loader": "5.0.1",
     "file-loader": "6.2.0",
     "html-webpack-plugin": "5.3.2",
+    "jest": "27.2.5",
     "mini-css-extract-plugin": "2.3.0",
     "normalize.css": "8.0.1",
     "postcss": "8.3.8",
@@ -42,6 +45,7 @@
     "svelte-check": "2.2.6",
     "svelte-loader": "3.1.2",
     "svelte-preprocess": "4.9.8",
+    "ts-jest": "27.0.5",
     "ts-loader": "9.2.6",
     "tslib": "2.3.1",
     "typescript": "4.3.5",

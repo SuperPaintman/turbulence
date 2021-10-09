@@ -38,7 +38,8 @@ jobs:
             - run: npm ci
 
             - run: NODE_ENV=development npx webpack
-            # - run: npm test
+
+            - run: npm test
 
     build-production:
         runs-on: ${{ matrix.os }}
@@ -66,7 +67,8 @@ jobs:
             - run: npm ci
 
             - run: npm run build
-            # - run: npm test
+
+            - run: npm test
 
     build-release:
         needs:
